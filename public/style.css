@@ -1,14 +1,17 @@
 /* ===== Global Styles ===== */
+* {
+    box-sizing: border-box; /* THE FIX: Keeps everything inside the screen */
+}
 
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background-color: #0f172a; /* Dark Navy */
     color: #f1f5f9;
+    overflow-x: hidden; /* Prevents side-scrolling */
 }
 
 /* ===== Navbar ===== */
-
 .navbar {
     background: #111827;
     padding: 15px 30px;
@@ -35,15 +38,14 @@ body {
     color: #22c55e; /* Green */
 }
 
-/* ===== Container ===== */
-
+/* ===== Container - Responsive Fix ===== */
 .container {
-    width: 80%;
+    width: 90%; /* Better for mobile */
+    max-width: 1100px; /* Better for laptop */
     margin: 40px auto;
 }
 
 /* ===== Buttons ===== */
-
 button {
     padding: 12px 25px;
     border: none;
@@ -60,7 +62,6 @@ button:hover {
 }
 
 /* ===== Forms ===== */
-
 input, select {
     padding: 12px;
     margin: 10px 0;
@@ -72,83 +73,40 @@ input, select {
 }
 
 /* ===== Block Cards ===== */
-
 .block-card {
     background: #1e293b;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    border-left: 6px solid #facc15; /* Yellow */
+    border-left: 6px solid #facc15; 
 }
 
-.block-card h2 {
-    color: #facc15;
-}
-
-.vote-data {
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 10px 0;
-}
-
-.hash-box {
-    background: #dc2626;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    word-break: break-all;
-    margin-bottom: 10px;
-}
-
-.hash-box.green {
-    background: #16a34a;
-}
 /* ===== HERO SECTION ===== */
-
 .hero {
     text-align: center;
-    padding: 80px 20px;
+    padding: 60px 20px;
     background: linear-gradient(135deg, #111827, #1e293b);
 }
 
 .hero h1 {
-    font-size: 40px;
+    font-size: clamp(24px, 5vw, 40px); /* Responsive font */
     color: #facc15;
     margin-bottom: 10px;
 }
 
-.hero p {
-    font-size: 18px;
-    color: #cbd5e1;
-    margin-bottom: 30px;
-}
-
-.hero-buttons button {
-    margin: 10px;
-}
-
-.secondary {
-    background: #1e293b;
-    border: 2px solid #22c55e;
-}
-
-.secondary:hover {
-    background: #22c55e;
-}
-
-/* ===== FEATURES ===== */
-
-.features {
+/* ===== FEATURES & GRIDS - The Mobile Fix ===== */
+.features, .candidate-grid {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap; /* Allows cards to drop to next line */
+    justify-content: center;
     gap: 20px;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
-.feature-card {
-    flex: 1;
+.feature-card, .candidate-card {
+    flex: 1 1 300px; /* Try to be 300px, but shrink/grow as needed */
+    max-width: 100%;
     background: #1e293b;
     padding: 25px;
     border-radius: 12px;
@@ -157,17 +115,12 @@ input, select {
     transition: 0.3s;
 }
 
-.feature-card:hover {
+.feature-card:hover, .candidate-card:hover {
     transform: translateY(-8px);
     border-bottom: 4px solid #facc15;
 }
 
-.feature-card h3 {
-    color: #22c55e;
-}
-
 /* ===== FOOTER ===== */
-
 .footer {
     text-align: center;
     padding: 20px;
@@ -175,110 +128,33 @@ input, select {
     background: #111827;
     color: #94a3b8;
 }
-/* ===== Voting Page Styling ===== */
 
-.vote-banner {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.vote-banner img {
-    width: 120px;
-}
-
-.vote-form {
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-}
-
-.candidate-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin: 20px 0;
-}
-
-.candidate-card {
-    flex: 1;
-    background: #0f172a;
-    padding: 20px;
-    text-align: center;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 2px solid transparent;
-}
-
-.candidate-card img {
-    width: 80px;
-    margin-bottom: 10px;
-}
-
-.candidate-card:hover {
-    transform: translateY(-5px);
-    border-color: #22c55e;
-}
-.card {
-    background: #1e293b;
-    padding: 20px;
-    margin: 20px auto;
-    width: 350px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(56,189,248,0.4);
-    transition: transform 0.3s;
-}
-
-.card:hover {
-    
-    transform: scale(1.05);
-}
 /* =========================================
-   MOBILE RESPONSIVE NAVBAR FIX
+   MOBILE RESPONSIVE TWEAKS
    ========================================= */
 @media screen and (max-width: 768px) {
-    /* Stack the navbar vertically instead of side-by-side */
     .navbar {
-        display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 15px 10px;
+        padding: 15px;
     }
 
-    /* Give the title some breathing room */
-    .navbar h2 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 24px;
-    }
-
-    /* Wrap the links so they fit on the screen */
     .nav-links {
+        margin-top: 15px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px; /* Space between buttons */
-        width: 100%;
+        gap: 10px;
     }
 
-    /* Turn the text links into finger-friendly mobile buttons */
     .nav-links a {
         margin: 0;
-        padding: 10px 15px;
-        background-color: #f1f1f1; /* Light background for the button */
-        color: #333;
-        border-radius: 8px;
+        background: #1e293b;
+        padding: 8px 12px;
+        border-radius: 5px;
         font-size: 14px;
-        text-decoration: none;
-        font-weight: bold;
-        flex: 1 1 calc(50% - 20px); /* Makes them sit neatly in a 2x2 grid */
-        box-sizing: border-box;
     }
 
-    /* Add a nice tap effect */
-    .nav-links a:active {
-        background-color: #ddd;
+    .feature-card, .candidate-card {
+        flex: 1 1 100%; /* Take full width on small phones */
     }
 }

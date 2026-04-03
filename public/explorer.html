@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <h2>🗳 Blockchain Voting</h2>
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="vote.html">🗳 Vote</a>
+        <a href="results.html">📊 Results</a>
+        <a href="explorer.html">🔎 Explorer</a>
+    </div>
+</div>
+
+<div class="container">
+    
+    <div style="text-align: left; margin-bottom: 20px;">
+        <button onclick="window.history.back()" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+            🔙 Go Back
+        </button>
+    </div>
+
+    <h1>🔎 Blockchain Explorer</h1>
+    <div id="blocksContainer">
+        <p><em>Loading blockchain data...</em></p>
+    </div>
+</div>
+
+<script>
+fetch('/blocks')
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return res.json();
+    })
+    .then(data => {
+        let output = "";
+
+        if (!data || data.length === 0) {
+            output = "<p>No blocks found on the chain yet.</p>";
+        } else {
+            data.forEach(block => {
+                output += `
+                <div class="block-card">
+                    <h2>Block #${block.index}</h2>
+                    <p><strong>Timestamp:</strong> ${new Date(block.timestamp).toLocaleString()}</p>
+
+                    <div class="vote-data">
+                        <strong>Data:</strong><br>
+                        ${typeof block.data === "object" 
+                            ? "Voter ID: " + (block.data.voterId || "N/A") + "<br>Candidate: " + (block.data.candidate || "N/A") 
+                            : block.data}
+                    </div>
+
+                    <p><strong>Previous Hash:</strong></p>
+                    <div class="hash-box">${block.previousHash}</div>
+
+                    <p><strong>Hash:</strong></p>
+                    <div class="hash-box green">${block.hash}</div>
+                </div>
+                `;
+            });
+        }
+
+        document.getElementById('blocksContainer').innerHTML = output;
+    })
+    .catch(err => {
+        console.error("Blockchain fetch error:", err);
+        document.getElementById('blocksContainer').innerHTML = `
+            <div class="block-card" style="border-left: 5px solid red;">
+                <h3>⚠️ Connection Error</h3>
+                <p>Could not connect to the blockchain network. Please ensure your backend server is running.</p>
+            </div>
+        `;
+    });
+</script>
+
+</body>
+</html>

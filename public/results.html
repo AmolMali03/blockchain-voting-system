@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Results</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🗳 Blockchain Voting</h2>
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="vote.html">🗳 Vote</a>
+        <a href="results.html">📊 Results</a>
+        <a href="explorer.html">🔎 Explorer</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>🏆 Election Ranking</h1>
+    <div id="results">
+        <p><em>Loading election results...</em></p>
+    </div>
+</div>
+
+<script>
+// Fixed: Added proper error handling and empty state checks
+fetch('/results')
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return res.json();
+    })
+    .then(data => {
+        
+        // Fixed: Handle the scenario where there are no votes yet or data is empty
+        if (!data || Object.keys(data).length === 0) {
+            document.getElementById('results').innerHTML = "<p>No votes have been cast yet. Be the first!</p>";
+            return;
+        }
+
+        // Convert object to array
+        let candidates = Object.keys(data).map(name => {
+            return { name: name, votes: data[name] };
+        });
+
+        // Sort by highest votes
+        candidates.sort((a, b) => b.votes - a.votes);
+
+        let output = "";
+
+        candidates.forEach((candidate, index) => {
+
+            let medal = "";
+            if(index === 0) medal = "🥇";
+            else if(index === 1) medal = "🥈";
+            else if(index === 2) medal = "🥉";
+            else medal = "🏅";
+
+            // Candidate symbol mapping
+            let symbol = "";
+            if(candidate.name === "Candidate A") symbol = "🏛";
+            else if(candidate.name === "Candidate B") symbol = "🌾";
+            else if(candidate.name === "Candidate C") symbol = "⚙";
+            else symbol = "👤";
+
+            output += `
+                <div class="card">
+                    <h2>${medal} Rank ${index + 1}</h2>
+                    <h3>${symbol} ${candidate.name}</h3>
+                    <p><strong>${candidate.votes}</strong> Votes</p>
+                </div>
+            `;
+        });
+
+        document.getElementById('results').innerHTML = output;
+    })
+    .catch(err => {
+        // Fixed: Show an error UI instead of a blank screen if the fetch fails
+        console.error("Results fetch error:", err);
+        document.getElementById('results').innerHTML = `
+            <div class="card" style="border-left: 5px solid red;">
+                <h3>⚠️ Connection Error</h3>
+                <p>Could not fetch results from the server. Please ensure the backend is running.</p>
+            </div>
+        `;
+    });
+</script>
+
+</body>
+</html>
